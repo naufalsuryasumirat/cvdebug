@@ -1,8 +1,24 @@
-#include <iostream>
-#include "trackbar/trackbar.h"
+#include <opencv.hpp>
 
-int main() {
-    std::cout << "executed properly" << std::endl;
+#include "src/trackbar.h"
+
+void func()
+{
+    std::shared_ptr<bool> debugging = tb::init(true);
+
+    // TODO: dangerous rn, can't quit
+    do {
+        tb::update();
+
+        fmt::print("count: {}, value: {}\n", debugging.use_count(), *debugging);
+
+        tb::view();
+    } while (*debugging);
+}
+
+int main()
+{
+    func();
 
     return 0;
 }
