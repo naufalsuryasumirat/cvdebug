@@ -22,8 +22,7 @@ IMGUI_DIR = $(SRC_DIR)/imgui
 
 CCJ = compile_commands.json
 
-# linker opencv
-# TODO: link opencv
+# lib paths
 ifneq (,$(wildcard ./.local.env))
     include .local.env
     export
@@ -48,7 +47,7 @@ LIBS =
 # assumes OpenGL3 is available system-wide
 ifeq ($(UNAME_S), Linux)
 	ECHO_MESSAGE = "Linux"
-	LIBS += $(LINUX_GL_LIBS) -ldl `sdl2-config --libs` -lfmt
+	LIBS += $(LINUX_GL_LIBS) -ldl `sdl2-config --libs`
 
 	CXXFLAGS += `sdl2-config --cflags`
 	CFLAGS = $(CXXFLAGS)
@@ -59,6 +58,14 @@ ifdef MK_OPENCV_LIB_DIR
 	LIBS += -L$(MK_OPENCV_LIB_DIR) -lopencv_core -lopencv_imgcodecs
 
 	CXXFLAGS += -I$(MK_OPENCV_INCLUDE_DIR)
+	CFLAGS = $(CXXFLAGS)
+endif
+
+ifdef MK_FMT_LIB_DIR 
+	ECHO_MESSAGE += "fmt"
+	LIBS += -L$(MK_FMT_LIB_DIR) -lfmt
+
+	CXXFLAGS += -I$(MK_FMT_INCLUDE_DIR)
 	CFLAGS = $(CXXFLAGS)
 endif
 
