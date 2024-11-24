@@ -7,8 +7,11 @@
 
 # this makefile is not cross-platform guaranteed, tested on Ubuntu 24.04.1 LTS and zig-nightly 14
 
-CC = zig cc
-CXX = zig c++
+# NOTE: is it worth using zig to compile? 
+
+# CC = zig cc
+# CXX = zig c++
+CXX = clang++
 
 TARGET_DIR = ./bin
 TARGET = $(TARGET_DIR)/trackbar_main 
@@ -21,6 +24,11 @@ CCJ = compile_commands.json
 
 # linker opencv
 # TODO: link opencv
+ifneq (,$(wildcard ./.local.env))
+    include .local.env
+    export
+endif
+
 LIB_PATH = 
 
 SOURCES = main.cpp
@@ -31,19 +39,30 @@ OBJS = $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(basename $(notdir $(SOURCES)))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
-CXXFLAGS = -MJ $(CCJ) -std=c++11 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
+# previous just using make
+# CXXFLAGS = -MJ $(CCJ) -std=c++11 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
+CXXFLAGS = -std=c++17 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
 CXXFLAGS += -g -Wall -Wformat
 LIBS =
 
 # assumes OpenGL3 is available system-wide
 ifeq ($(UNAME_S), Linux)
 	ECHO_MESSAGE = "Linux"
-	LIBS += $(LINUX_GL_LIBS) -ldl `sdl2-config --libs`
+	LIBS += $(LINUX_GL_LIBS) -ldl `sdl2-config --libs` -lfmt
 
 	CXXFLAGS += `sdl2-config --cflags`
 	CFLAGS = $(CXXFLAGS)
 endif
 
+ifdef MK_OPENCV_LIB_DIR
+	ECHO_MESSAGE += "OpenCV"
+	LIBS += -L$(MK_OPENCV_LIB_DIR) -lopencv_core
+
+	CXXFLAGS += -I$(MK_OPENCV_INCLUDE_DIR)
+	CFLAGS = $(CXXFLAGS)
+endif
+
+# TODO: probably add lfmt to Windows too
 ifeq ($(OS), Windows_NT)
     ECHO_MESSAGE = "MinGW"
     LIBS += -lgdi32 -lopengl32 -limm32 `pkg-config --static --libs sdl2`
