@@ -31,7 +31,7 @@ endif
 LIB_PATH = 
 
 SOURCES = main.cpp
-SOURCES += $(SRC_DIR)/trackbar.cpp
+SOURCES += $(SRC_DIR)/trackbar.cpp $(SRC_DIR)/params/tb_params.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl2.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 OBJS = $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
@@ -55,7 +55,7 @@ endif
 
 ifdef MK_OPENCV_LIB_DIR
 	ECHO_MESSAGE += "OpenCV"
-	LIBS += -L$(MK_OPENCV_LIB_DIR) -lopencv_core -lopencv_imgcodecs
+	LIBS += -L$(MK_OPENCV_LIB_DIR) -lopencv_core -lopencv_imgcodecs -lopencv_imgproc
 
 	CXXFLAGS += -I$(MK_OPENCV_INCLUDE_DIR)
 	CFLAGS = $(CXXFLAGS)
@@ -83,6 +83,9 @@ $(OBJ_DIR)/%.o:%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)/%.o:$(SRC_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)/%.o:$(SRC_DIR)/params/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)/%.o:$(IMGUI_DIR)/%.cpp
