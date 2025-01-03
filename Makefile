@@ -31,7 +31,7 @@ endif
 LIB_PATH = 
 
 SOURCES = main.cpp
-SOURCES += $(SRC_DIR)/trackbar.cpp $(SRC_DIR)/params/tb_params.cpp 
+SOURCES += $(SRC_DIR)/trackbar.cpp $(SRC_DIR)/params/tb_params.cpp $(SRC_DIR)/params/tb_callback.cpp $(SRC_DIR)/params/tb_internal.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl2.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 OBJS = $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
@@ -63,6 +63,7 @@ endif
 ifdef MK_OPENCV_LIB_DIR
 	ECHO_MESSAGE += "OpenCV"
 	LIBS += -L$(MK_OPENCV_LIB_DIR) -lopencv_core -lopencv_imgcodecs -lopencv_imgproc
+	LIBS += -rpath $(MK_OPENCV_LIB_DIR)
 
 	CXXFLAGS += -I$(MK_OPENCV_INCLUDE_DIR)
 	CFLAGS = $(CXXFLAGS)
@@ -71,6 +72,7 @@ endif
 ifdef MK_FMT_LIB_DIR 
 	ECHO_MESSAGE += "fmt"
 	LIBS += -L$(MK_FMT_LIB_DIR) -lfmt
+	LIBS += -rpath $(MK_FMT_LIB_DIR)
 
 	CXXFLAGS += -I$(MK_FMT_INCLUDE_DIR)
 	CFLAGS = $(CXXFLAGS)
@@ -107,7 +109,8 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
+# TODO: should clean delete compile_commands.json?
 clean:
-	rm -f $(TARGET) $(OBJS) $(CCJ)
+	rm -f $(TARGET) $(OBJS)
 
 # TODO: write other flags (debug, release w/ debug, release w/o debug)
