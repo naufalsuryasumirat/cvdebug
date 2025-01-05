@@ -19,6 +19,7 @@ TARGET = $(TARGET_DIR)/trackbar_main
 OBJ_DIR = ./obj
 SRC_DIR = ./src
 IMGUI_DIR = $(SRC_DIR)/imgui
+IMPLOT_DIR = $(SRC_DIR)/implot
 
 CCJ = compile_commands.json
 
@@ -31,16 +32,10 @@ endif
 LIB_PATH = 
 
 SOURCES = main.cpp
-SOURCES += $(SRC_DIR)/trackbar.cpp $(SRC_DIR)/params/tb_params.cpp $(SRC_DIR)/params/tb_callback.cpp $(SRC_DIR)/params/tb_internal.cpp
+SOURCES += $(SRC_DIR)/trackbar.cpp $(SRC_DIR)/params/tb_params.cpp $(SRC_DIR)/params/tb_callback.cpp $(SRC_DIR)/params/tb_internal.cpp $(SRC_DIR)/util/util.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl2.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
-OBJS = $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
-UNAME_S := $(shell uname -s)
-LINUX_GL_LIBS = -lGL
-
-# previous just using make
-SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
-SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl2.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
+SOURCES += $(IMPLOT_DIR)/implot.cpp $(IMPLOT_DIR)/implot_demo.cpp $(IMPLOT_DIR)/implot_items.cpp
 OBJS = $(addprefix $(OBJ_DIR)/, $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
@@ -97,7 +92,13 @@ $(OBJ_DIR)/%.o:$(SRC_DIR)/%.cpp
 $(OBJ_DIR)/%.o:$(SRC_DIR)/params/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
+$(OBJ_DIR)/%.o:$(SRC_DIR)/util/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
 $(OBJ_DIR)/%.o:$(IMGUI_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(OBJ_DIR)/%.o:$(IMPLOT_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(OBJ_DIR)/%.o:$(IMGUI_DIR)/backends/%.cpp
