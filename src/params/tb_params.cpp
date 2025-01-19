@@ -57,12 +57,3 @@ tb::pg tb::p::operator ,(p&& b)
     group.children.push_back(b);
     return group;
 }
-
-// tb::p& tb::p::operator =(const p& b)
-// {
-//     this->name = b.name;
-//     this->children = b.children;
-//     this->has_data = b.has_data;
-//     this->d = b.d;
-//     return *this;
-// }

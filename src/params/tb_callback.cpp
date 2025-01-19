@@ -45,7 +45,7 @@ void _cb_less_than(arp_var v, arp_var cmp)
             static V prev = std::numeric_limits<V>::max();
             if (*_v >= *_cmp) {
                 *_v = prev;
-                if (*_v >= *_cmp) // if still more than
+                if (*_v >= *_cmp) // if still moreeq than
                     *_v = *_cmp - static_cast<V>(1);
             }
             prev = *_v;

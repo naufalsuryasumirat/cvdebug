@@ -12,7 +12,7 @@ namespace tb {
 struct p;
 typedef struct p p;
 
-// TODO: enforce max, min, and v to be the same type, but ignore for boolean ofc
+// NOTE: better to enforce max, min, and v to be the same type evaluated at compile-time
 struct dt {
     std::variant<int*, float*, double*, bool*> v;
     int max,
@@ -41,7 +41,6 @@ struct p {
     p(std::initializer_list<p> ps);
 
     pg operator ,(p&& b);
-    // p& operator =(const p& b); // NOTE: should delete?
 };
 
 }
